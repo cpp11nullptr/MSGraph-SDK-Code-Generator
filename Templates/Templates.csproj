@@ -132,6 +132,14 @@
     <Content Include="Android\generated\IBaseMethodRequest.java.tt" />
     <Content Include="Android\generated\IBaseMethodRequestBuilder.java.tt" />
     <Content Include="Android\generated\IBaseStreamRequest.java.tt" />
+    <Content Include="Cpp\Base\SharedCpp.template.tt" />
+    <Content Include="Cpp\Models\ClientModels.h.tt" />
+    <Content Include="Cpp\Models\ModelEnumEntity.h.tt" />
+    <Content Include="Cpp\Models\ModelTypeEntity.h.tt" />
+    <Content Include="Cpp\Requests\IRequestBuilderEntity.h.tt" />
+    <Content Include="Cpp\Requests\IRequestEntity.h.tt" />
+    <Content Include="Cpp\Requests\RequestEntity.h.tt" />
+    <Content Include="Cpp\Requests\RequestBuilderEntity.h.tt" />
     <Content Include="CSharp\Base\CollectionRequest.Base.template.tt" />
     <Content Include="CSharp\Base\CollectionRequestBuilder.Base.template.tt" />
     <Content Include="CSharp\Base\EntityRequest.Base.template.tt" />

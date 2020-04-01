@@ -1,0 +1,34 @@
+﻿<# // Copyright (c) Microsoft Corporation.  All Rights Reserved.  Licensed under the MIT License.  See License in the project root for license information. #>
+<# // TODO: Move template processing to generator code. #>
+<#@ template debug="true" hostspecific="true" language="C#" #>
+<#@ include file="SharedCpp.template.tt" #>
+// Template Source: Templates\Cpp\Models\ClientModels.h.tt
+<#
+	var enumTypes = model.GetEnumTypes();
+	foreach(var enumType in enumTypes)
+	{
+#>
+#include "<#= enumType.Name.ToUpperFirstChar() #>.h"
+<#
+	}
+#>
+
+<#
+	var complexTypes = model.GetComplexTypes().Where(complexType => !complexType.LongDescriptionContains("methodResponse"));
+	foreach(var complexType in complexTypes)
+	{
+#>
+#include "<#= complexType.Name.ToUpperFirstChar() #>.h"
+<#
+	}
+#>
+
+<#
+	var entityTypes = model.GetEntityTypes();
+	foreach(var entityType in entityTypes)
+	{
+#>
+#include "<#= entityType.Name.ToUpperFirstChar() #>.h"
+<#
+	}
+#>

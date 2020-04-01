@@ -56,6 +56,22 @@
     <Compile Include="CodeHelpers\Android\CustomMethods.cs" />
     <Compile Include="CodeHelpers\Android\CustomOverwrites.cs" />
     <Compile Include="CodeHelpers\CodeWriterBase.cs" />
+    <Compile Include="CodeHelpers\Cpp\CodeWriterCpp.cs" />
+    <Compile Include="CodeHelpers\Cpp\EntityConverter.cs" />
+    <Compile Include="CodeHelpers\Cpp\Entities\BaseEntity.cs" />
+    <Compile Include="CodeHelpers\Cpp\Entities\BaseRequestEntity.cs" />
+    <Compile Include="CodeHelpers\Cpp\Entities\ModelEnumEntity.cs" />
+    <Compile Include="CodeHelpers\Cpp\Entities\ModelTypeEntity.cs" />
+    <Compile Include="CodeHelpers\Cpp\Entities\RequestBuilderEntity.cs" />
+    <Compile Include="CodeHelpers\Cpp\Entities\RequestBuilderInterfaceEntity.cs" />
+    <Compile Include="CodeHelpers\Cpp\Entities\RequestEntity.cs" />
+    <Compile Include="CodeHelpers\Cpp\Entities\RequestInterfaceEntity.cs" />
+    <Compile Include="CodeHelpers\Cpp\Helpers\BasicType.cs" />
+    <Compile Include="CodeHelpers\Cpp\Helpers\TypeResolver.cs" />
+    <Compile Include="CodeHelpers\Cpp\Helpers\CodeBlock.cs" />
+    <Compile Include="CodeHelpers\Cpp\Helpers\IncludeFile.cs" />
+    <Compile Include="CodeHelpers\Cpp\Helpers\IncludeBlock.cs" />
+    <Compile Include="CodeHelpers\Cpp\Helpers\NameConverter.cs" />
     <Compile Include="CodeHelpers\CSharp\CodeWriterCSharp.cs" />
     <Compile Include="CodeHelpers\CSharp\TypeHelperCSharp.cs" />
     <Compile Include="CodeHelpers\Java\CodeWriterJava.cs" />
@@ -72,6 +88,7 @@
     <Compile Include="CodeHelpers\Python\TypeHelperPython.cs" />
     <Compile Include="Extensions\FeatureExtensions.cs" />
     <Compile Include="PathWriters\AndroidPathWriter.cs" />
+    <Compile Include="PathWriters\CppPathWriter.cs" />
     <Compile Include="PathWriters\CSharpPathWriter.cs" />
     <Compile Include="PathWriters\TypeScriptPathWriter.cs" />
     <Compile Include="PathWriters\GraphEndpointListPathWriter.cs" />
@@ -103,6 +120,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include=".config\JavaSettings.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include=".config\CppSettings.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include=".config\CSharpSettings.json">

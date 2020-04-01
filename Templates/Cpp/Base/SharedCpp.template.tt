@@ -1,0 +1,18 @@
+﻿<# // Copyright (c) Microsoft Corporation.  All Rights Reserved.  Licensed under the MIT License.  See License in the project root for license information. #>
+<#@ template debug="true" hostspecific="true" language="C#" #>
+<#
+	host = (CustomT4Host)Host;
+	model = host.CurrentModel;
+	writer = (CodeWriterCpp)host.CodeWriter;
+#>
+<#=
+	writer.WriteHeader()
+#>
+
+// **NOTE** The file is auto generated, please, do not modify.
+
+<#+
+	private CustomT4Host host;
+	private OdcmModel model;
+	private CodeWriterCpp writer;
+#>

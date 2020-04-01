@@ -1,0 +1,27 @@
+﻿<# // Copyright (c) Microsoft Corporation.  All Rights Reserved.  Licensed under the MIT License.  See License in the project root for license information. #>
+<#@ template debug="true" hostspecific="true" language="C#" #>
+<#@ include file="SharedCpp.template.tt" #>
+// Template Source: Templates\Cpp\Models\ModelEnumEntity.h.tt
+<#
+	var entity = host.CurrentType.AsOdcmEnum().ToModelEnumEntity();
+#>
+
+#pragma once
+
+<#= entity.GenerateIncludeStatements() #>
+<#= entity.GenerateNamespaceName() #>
+{
+<#= entity.GenerateEntityHeader() #>
+	{
+<#= entity.GenerateEnumMembers() #>
+	};
+
+<#= entity.GenerateParseValueFunction() #>
+<#= entity.GenerateDeserializeFunction() #>
+<# if (entity.IsEnumFlagsType()) #>
+<# { #>
+<#= entity.GenerateBitwiseOrOperator() #>
+<#= entity.GenerateBitwiseAndOperator() #>
+<#= entity.GenerateBitwiseOrAssignmentOperator() #>
+<# } #>
+}
