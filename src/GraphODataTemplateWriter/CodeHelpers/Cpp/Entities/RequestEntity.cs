@@ -43,6 +43,7 @@ namespace Microsoft.Graph.ODataTemplateWriter.CodeHelpers.Cpp.Entities
 
             includesBlock.AppendFile(IncludeFile.GraphSdkBaseClientInterface, isSystem: false);
             includesBlock.AppendFile(IncludeFile.GraphSdkBaseRequest, isSystem: false);
+            includesBlock.AppendLine();
 
             return includesBlock.ToString();
         }
@@ -56,9 +57,9 @@ namespace Microsoft.Graph.ODataTemplateWriter.CodeHelpers.Cpp.Entities
 
             using (CodeBlock codeBlock = new CodeBlock(1))
             {
-                codeBlock.AppendLine($"/// <summary>");
-                codeBlock.AppendLine($"/// A request for {entityName} entity.");
-                codeBlock.AppendLine($"/// </summary>");
+                codeBlock.AppendLine($"/*");
+                codeBlock.AppendLine($" * A request for {entityName} entity.");
+                codeBlock.AppendLine($" */");
                 codeBlock.AppendLine($"class {requestEntityName} final");
                 codeBlock.AppendLineShifted($": {baseClassesList}", newLine: false);
 

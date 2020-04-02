@@ -13,7 +13,7 @@ namespace Microsoft.Graph.ODataTemplateWriter.CodeHelpers.Cpp.Helpers
     /// <summary>
     /// A helper generates a block with include statements.
     /// </summary>
-    internal sealed class IncludeBlock
+    public sealed class IncludeBlock
     {
         /// <summary>
         /// Instantiates a new instance of <see cref="IncludeBlock"/> class.
@@ -40,6 +40,22 @@ namespace Microsoft.Graph.ODataTemplateWriter.CodeHelpers.Cpp.Helpers
             string includeStatement = string.Format(isSystem ? SystemIncludeFormat : UserDefinedIncludeFormat, includeFile);
 
             _builder.AppendLine(includeStatement);
+
+            return this;
+        }
+
+        /// <summary>
+        /// Adds include statements to the block.
+        /// </summary>
+        /// <param name="includeFile">The include files.</param>
+        /// <param name="isSystem">Whether it is a system defined file.</param>
+        /// <returns>The reference to this instance after the append operation has completed.</returns>
+        public IncludeBlock AppendFiles(IEnumerable<string> includeFiles, bool isSystem)
+        {
+            foreach (string includeFile in includeFiles)
+            {
+                AppendFile(includeFile, isSystem);
+            }
 
             return this;
         }

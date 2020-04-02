@@ -38,6 +38,7 @@ namespace Microsoft.Graph.ODataTemplateWriter.CodeHelpers.Cpp.Entities
 
             includesBlock.AppendFilesFromTypes(membersTypes, includeSystemOnly: false);
             includesBlock.AppendFile(IncludeFile.GraphSdkStringUtils, isSystem: false);
+            includesBlock.AppendLine();
 
             return includesBlock.ToString();
         }
@@ -49,9 +50,9 @@ namespace Microsoft.Graph.ODataTemplateWriter.CodeHelpers.Cpp.Entities
 
             using (CodeBlock codeBlock = new CodeBlock(1))
             {
-                codeBlock.AppendLine($"/// <summary>");
-                codeBlock.AppendLine($"/// {entityName} model type.");
-                codeBlock.AppendLine($"/// </summary>");
+                codeBlock.AppendLine($"/*");
+                codeBlock.AppendLine($" * {entityName} model type.");
+                codeBlock.AppendLine($" */");
 
                 if (HasBaseEntity())
                 {
@@ -102,9 +103,9 @@ namespace Microsoft.Graph.ODataTemplateWriter.CodeHelpers.Cpp.Entities
                         memberSummary = $"The {splitName}.";
                     }
 
-                    membersCodeBlock.AppendLine($"/// <summary>");
-                    membersCodeBlock.AppendLine($"/// {memberSummary}");
-                    membersCodeBlock.AppendLine($"/// </summary>");
+                    membersCodeBlock.AppendLine($"/*");
+                    membersCodeBlock.AppendLine($" * {memberSummary}");
+                    membersCodeBlock.AppendLine($" */");
 
                     bool appendNewLine = i < odcmProperties.Count - 1 || !hasBaseEntity;
 
@@ -125,15 +126,15 @@ namespace Microsoft.Graph.ODataTemplateWriter.CodeHelpers.Cpp.Entities
 
                 if (!hasBaseEntity)
                 {
-                    membersCodeBlock.AppendLine($"/// <summary>");
-                    membersCodeBlock.AppendLine($"/// Open data protocol payload.");
-                    membersCodeBlock.AppendLine($"/// </summary>");
+                    membersCodeBlock.AppendLine($"/*");
+                    membersCodeBlock.AppendLine($" * OData payload.");
+                    membersCodeBlock.AppendLine($" */");
                     membersCodeBlock.AppendLine($"{BasicType.WideString} odata;");
                     membersCodeBlock.AppendLine();
 
-                    membersCodeBlock.AppendLine($"/// <summary>");
-                    membersCodeBlock.AppendLine($"/// Additional data.");
-                    membersCodeBlock.AppendLine($"/// </summary>");
+                    membersCodeBlock.AppendLine($"/*");
+                    membersCodeBlock.AppendLine($" *");
+                    membersCodeBlock.AppendLine($" */");
                     membersCodeBlock.AppendLine($"{BasicType.Dictionary} additionalData;", newLine: false);
                 }
 

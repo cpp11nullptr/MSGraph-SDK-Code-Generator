@@ -34,6 +34,7 @@ namespace Microsoft.Graph.ODataTemplateWriter.CodeHelpers.Cpp.Entities
             includesBlock.AppendLine();
 
             includesBlock.AppendFile(IncludeFile.GraphSdkStringUtils, isSystem: false);
+            includesBlock.AppendLine();
 
             return includesBlock.ToString();
         }
@@ -52,9 +53,9 @@ namespace Microsoft.Graph.ODataTemplateWriter.CodeHelpers.Cpp.Entities
 
             using (CodeBlock codeBlock = new CodeBlock(1))
             {
-                codeBlock.AppendLine($"/// <summary>");
-                codeBlock.AppendLine($"/// {entityName} model enumeration.");
-                codeBlock.AppendLine($"/// </summary>");
+                codeBlock.AppendLine($"/*");
+                codeBlock.AppendLine($" * {entityName} model enumeration.");
+                codeBlock.AppendLine($" */");
                 codeBlock.AppendLine($"enum class {entityName} : {enumBaseType}", newLine: false);
 
                 return codeBlock.ToString();
