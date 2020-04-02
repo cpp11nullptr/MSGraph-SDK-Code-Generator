@@ -12,7 +12,7 @@ namespace Microsoft.Graph.ODataTemplateWriter.CodeHelpers.Cpp.Entities
     using Vipr.Core.CodeModel;
 
     /// <summary>
-    /// A base class for request entity.
+    /// A base request entity.
     /// </summary>
     public abstract class BaseRequestEntity : BaseEntity
     {
@@ -23,6 +23,16 @@ namespace Microsoft.Graph.ODataTemplateWriter.CodeHelpers.Cpp.Entities
         /// <param name="odcmClass">The ODCM class.</param>
         public BaseRequestEntity(OdcmClass odcmClass)
             : base(odcmClass)
+        {
+        }
+
+        /// <summary>
+        /// Instantiates a new instance of <see cref="BaseRequestEntity"/> class
+        /// based on passed ODCM property.
+        /// </summary>
+        /// <param name="odcmProperty">The ODCM property.</param>
+        public BaseRequestEntity(OdcmProperty odcmProperty)
+            : base(odcmProperty)
         {
         }
 
@@ -110,6 +120,31 @@ namespace Microsoft.Graph.ODataTemplateWriter.CodeHelpers.Cpp.Entities
             }
 
             return includeStatements.OrderBy(statement => statement);
+        }
+
+        /// <summary>
+        /// Constructs name of entity which collection is based on.
+        /// </summary>
+        /// <returns>The constructed collection base name.</returns>
+        protected string GetCollectionBaseEntityName()
+        {
+            OdcmProperty odcmProperty = GetOdcmTypeAsProperty();
+
+            return NameConverter.CapitalizeName(odcmProperty.Class.Name);
+        }
+
+        /// <summary>
+        /// Constructs collection entity name based on underlying ODCM property.
+        /// </summary>
+        /// <returns>The constructed collection entity name.</returns>
+        protected string GetCollectionEntityName()
+        {
+            OdcmProperty odcmProperty = GetOdcmTypeAsProperty();
+
+            string entityName = GetCollectionBaseEntityName();
+            string propertyName = NameConverter.CapitalizeName(odcmProperty.Name);
+
+            return $"{entityName}{propertyName}Collection";
         }
     }
 }

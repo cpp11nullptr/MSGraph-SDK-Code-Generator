@@ -13,7 +13,7 @@ namespace Microsoft.Graph.ODataTemplateWriter.CodeHelpers.Cpp.Helpers
     /// <summary>
     /// A helper generates a block with include statements.
     /// </summary>
-    public sealed class IncludeBlock
+    internal sealed class IncludeBlock
     {
         /// <summary>
         /// Instantiates a new instance of <see cref="IncludeBlock"/> class.

@@ -57,6 +57,10 @@
     <Compile Include="CodeHelpers\Android\CustomOverwrites.cs" />
     <Compile Include="CodeHelpers\CodeWriterBase.cs" />
     <Compile Include="CodeHelpers\Cpp\CodeWriterCpp.cs" />
+    <Compile Include="CodeHelpers\Cpp\Entities\CollectionPageEntity.cs" />
+    <Compile Include="CodeHelpers\Cpp\Entities\CollectionRequestBuilderEntity.cs" />
+    <Compile Include="CodeHelpers\Cpp\Entities\CollectionRequestEntity.cs" />
+    <Compile Include="CodeHelpers\Cpp\Entities\CollectionResponseEntity.cs" />
     <Compile Include="CodeHelpers\Cpp\EntityConverter.cs" />
     <Compile Include="CodeHelpers\Cpp\Entities\BaseEntity.cs" />
     <Compile Include="CodeHelpers\Cpp\Entities\BaseRequestEntity.cs" />

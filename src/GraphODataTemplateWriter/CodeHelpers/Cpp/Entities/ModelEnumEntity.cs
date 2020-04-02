@@ -10,7 +10,7 @@ namespace Microsoft.Graph.ODataTemplateWriter.CodeHelpers.Cpp.Entities
     using Vipr.Core.CodeModel;
 
     /// <summary>
-    /// A C++ model enumeration.
+    /// An enumeration model.
     /// </summary>
     public sealed class ModelEnumEntity : BaseEntity
     {

@@ -62,15 +62,15 @@ namespace Microsoft.Graph.ODataTemplateWriter.CodeHelpers.Cpp.Entities
             string requestBuilderEntityName = GetRequestBuilderEntityName();
             string baseClassesList = GetBaseClassesList();
 
-            using (CodeBlock codeBlock = new CodeBlock(1))
+            using (CodeBlock headerBlock = new CodeBlock(1))
             {
-                codeBlock.AppendLine($"/*");
-                codeBlock.AppendLine($" * A builder to create a request for {entityName} entity.");
-                codeBlock.AppendLine($" */");
-                codeBlock.AppendLine($"class {requestBuilderEntityName} final");
-                codeBlock.AppendLineShifted($": {baseClassesList}", newLine: false);
+                headerBlock.AppendLine($"/*");
+                headerBlock.AppendLine($" * A builder to create a request for {entityName} entity.");
+                headerBlock.AppendLine($" */");
+                headerBlock.AppendLine($"class {requestBuilderEntityName} final");
+                headerBlock.AppendLineShifted($": {baseClassesList}", newLine: false);
 
-                return codeBlock.ToString();
+                return headerBlock.ToString();
             }
         }
 

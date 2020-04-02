@@ -11,7 +11,7 @@ namespace Microsoft.Graph.ODataTemplateWriter.CodeHelpers.Cpp
     /// <summary>
     /// A converter creates a specialized entity on top of ODCM entity.
     /// </summary>
-    public static partial class EntityConverter
+    public static class EntityConverter
     {
         /// <summary>
         /// Creates a model enum entity.
@@ -34,23 +34,43 @@ namespace Microsoft.Graph.ODataTemplateWriter.CodeHelpers.Cpp
         }
 
         /// <summary>
-        /// Creates a request entity.
+        /// Creates a collection page entity.
         /// </summary>
-        /// <param name="odcmClass">The ODCM class instance.</param>
-        /// <returns>The request entity instance.</returns>
-        public static RequestEntity ToRequestEntity(this OdcmClass odcmClass)
+        /// <param name="odcmProperty">The ODCM property instance.</param>
+        /// <returns>The collection page entity instance.</returns>
+        public static CollectionPageEntity ToCollectionPageEntity(this OdcmProperty odcmProperty)
         {
-            return new RequestEntity(odcmClass);
+            return new CollectionPageEntity(odcmProperty);
         }
 
-        /// <summary>
-        /// Creates a request interface entity.
+        // <summary>
+        /// Creates a collection request builder entity.
         /// </summary>
-        /// <param name="odcmClass">The ODCM class instance.</param>
-        /// <returns>The request interface entity instance.</returns>
-        public static RequestInterfaceEntity ToRequestInterfaceEntity(this OdcmClass odcmClass)
+        /// <param name="odcmProperty">The ODCM property instance.</param>
+        /// <returns>The collection request builder entity instance.</returns>
+        public static CollectionRequestBuilderEntity ToCollectionRequestBuilderEntity(this OdcmProperty odcmProperty)
         {
-            return new RequestInterfaceEntity(odcmClass);
+            return new CollectionRequestBuilderEntity(odcmProperty);
+        }
+
+        // <summary>
+        /// Creates a collection request entity.
+        /// </summary>
+        /// <param name="odcmProperty">The ODCM property instance.</param>
+        /// <returns>The collection request entity instance.</returns>
+        public static CollectionRequestEntity ToCollectionRequestEntity(this OdcmProperty odcmProperty)
+        {
+            return new CollectionRequestEntity(odcmProperty);
+        }
+
+        // <summary>
+        /// Creates a collection response entity.
+        /// </summary>
+        /// <param name="odcmProperty">The ODCM property instance.</param>
+        /// <returns>The collection response entity instance.</returns>
+        public static CollectionResponseEntity ToCollectionResponseEntity(this OdcmProperty odcmProperty)
+        {
+            return new CollectionResponseEntity(odcmProperty);
         }
 
         /// <summary>
@@ -71,6 +91,26 @@ namespace Microsoft.Graph.ODataTemplateWriter.CodeHelpers.Cpp
         public static RequestBuilderInterfaceEntity ToRequestBuilderInterfaceEntity(this OdcmClass odcmClass)
         {
             return new RequestBuilderInterfaceEntity(odcmClass);
+        }
+
+        /// <summary>
+        /// Creates a request entity.
+        /// </summary>
+        /// <param name="odcmClass">The ODCM class instance.</param>
+        /// <returns>The request entity instance.</returns>
+        public static RequestEntity ToRequestEntity(this OdcmClass odcmClass)
+        {
+            return new RequestEntity(odcmClass);
+        }
+
+        /// <summary>
+        /// Creates a request interface entity.
+        /// </summary>
+        /// <param name="odcmClass">The ODCM class instance.</param>
+        /// <returns>The request interface entity instance.</returns>
+        public static RequestInterfaceEntity ToRequestInterfaceEntity(this OdcmClass odcmClass)
+        {
+            return new RequestInterfaceEntity(odcmClass);
         }
     }
 }

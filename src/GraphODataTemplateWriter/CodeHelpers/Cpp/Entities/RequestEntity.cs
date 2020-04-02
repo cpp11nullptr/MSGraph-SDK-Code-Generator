@@ -9,7 +9,7 @@ namespace Microsoft.Graph.ODataTemplateWriter.CodeHelpers.Cpp.Entities
     using Vipr.Core.CodeModel;
 
     /// <summary>
-    /// A C++ request.
+    /// A request entity.
     /// </summary>
     public sealed class RequestEntity : BaseRequestEntity
     {
@@ -55,15 +55,15 @@ namespace Microsoft.Graph.ODataTemplateWriter.CodeHelpers.Cpp.Entities
             string requestEntityName = GetRequestEntityName();
             string baseClassesList = GetBaseClassesList();
 
-            using (CodeBlock codeBlock = new CodeBlock(1))
+            using (CodeBlock headerBlock = new CodeBlock(1))
             {
-                codeBlock.AppendLine($"/*");
-                codeBlock.AppendLine($" * A request for {entityName} entity.");
-                codeBlock.AppendLine($" */");
-                codeBlock.AppendLine($"class {requestEntityName} final");
-                codeBlock.AppendLineShifted($": {baseClassesList}", newLine: false);
+                headerBlock.AppendLine($"/*");
+                headerBlock.AppendLine($" * A request for {entityName} entity.");
+                headerBlock.AppendLine($" */");
+                headerBlock.AppendLine($"class {requestEntityName} final");
+                headerBlock.AppendLineShifted($": {baseClassesList}", newLine: false);
 
-                return codeBlock.ToString();
+                return headerBlock.ToString();
             }
         }
 

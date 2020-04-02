@@ -10,7 +10,7 @@ namespace Microsoft.Graph.ODataTemplateWriter.CodeHelpers.Cpp.Entities
     using Vipr.Core.CodeModel;
 
     /// <summary>
-    /// A base class for C++ entity.
+    /// A base entity.
     /// </summary>
     public abstract class BaseEntity
     {
@@ -30,6 +30,7 @@ namespace Microsoft.Graph.ODataTemplateWriter.CodeHelpers.Cpp.Entities
         /// Instantiates a new instance of <see cref="BaseEntity"/> class
         /// based on passed ODCM class.
         /// </summary>
+        /// <param name="odcmClass">The ODCM class instance.</param>
         public BaseEntity(OdcmClass odcmClass)
         {
             _odcmClass = odcmClass;
@@ -39,9 +40,20 @@ namespace Microsoft.Graph.ODataTemplateWriter.CodeHelpers.Cpp.Entities
         /// Instantiates a new instance of <see cref="BaseEntity"/> class
         /// based on passed ODCM enumeration.
         /// </summary>
+        /// <param name="odcmEnum">The ODCM enumeration instance.</param>
         public BaseEntity(OdcmEnum odcmEnum)
         {
             _odcmEnum = odcmEnum;
+        }
+
+        /// <summary>
+        /// Instantiates a new instance of <see cref="BaseEntity"/> class
+        /// based on passed ODCM property.
+        /// </summary>
+        /// <param name="odcmProperty">The ODCM property instance.</param>
+        public BaseEntity(OdcmProperty odcmProperty)
+        {
+            _odcmProperty = odcmProperty;
         }
 
         /// <summary>
@@ -129,10 +141,27 @@ namespace Microsoft.Graph.ODataTemplateWriter.CodeHelpers.Cpp.Entities
         {
             if (_odcmEnum == null)
             {
-                throw new Exception("An ODCM type is not enum type.");
+                throw new Exception("An ODCM type is not enumeration type.");
             }
 
             return _odcmEnum;
+        }
+
+        /// <summary>
+        /// Gets ODCM property which the entity based on.
+        /// </summary>
+        /// <remarks>
+        /// If entity is not based on ODCM enumeration the exception will be thrown.
+        /// </remarks>
+        /// <returns>The ODCM property.</returns>
+        protected OdcmProperty GetOdcmTypeAsProperty()
+        {
+            if (_odcmProperty == null)
+            {
+                throw new Exception("An ODCM type is not property type.");
+            }
+
+            return _odcmProperty;
         }
 
         /// <summary>
@@ -149,6 +178,10 @@ namespace Microsoft.Graph.ODataTemplateWriter.CodeHelpers.Cpp.Entities
             {
                 return _odcmEnum;
             }
+            else if (_odcmProperty != null)
+            {
+                return _odcmProperty.Type;
+            }
 
             throw new Exception("An ODCM type is undefined.");
         }
@@ -162,5 +195,10 @@ namespace Microsoft.Graph.ODataTemplateWriter.CodeHelpers.Cpp.Entities
         /// A ODCM enumeration instance which the entity is based on.
         /// </summary>
         private readonly OdcmEnum _odcmEnum;
+
+        /// <summary>
+        /// A ODCM property instance which the entity is based on.
+        /// </summary>
+        private readonly OdcmProperty _odcmProperty;
     }
 }

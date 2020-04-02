@@ -54,14 +54,14 @@ namespace Microsoft.Graph.ODataTemplateWriter.CodeHelpers.Cpp.Entities
             string entityName = GetEntityName();
             string requestBuilderInterfaceEntityName = GetRequestBuilderInterfaceEntityName();
 
-            using (CodeBlock codeBlock = new CodeBlock(1))
+            using (CodeBlock headerBlock = new CodeBlock(1))
             {
-                codeBlock.AppendLine($"/*");
-                codeBlock.AppendLine($" * An interface of a builder to create a request for {entityName} entity.");
-                codeBlock.AppendLine($" */");
-                codeBlock.AppendLine($"struct {requestBuilderInterfaceEntityName}", newLine: false);
+                headerBlock.AppendLine($"/*");
+                headerBlock.AppendLine($" * An interface of a builder to create a request for {entityName} entity.");
+                headerBlock.AppendLine($" */");
+                headerBlock.AppendLine($"struct {requestBuilderInterfaceEntityName}", newLine: false);
 
-                return codeBlock.ToString();
+                return headerBlock.ToString();
             }
         }
 
