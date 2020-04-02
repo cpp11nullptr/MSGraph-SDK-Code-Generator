@@ -14,6 +14,7 @@
 <#= entity.GenerateEntityHeader() #>
 	{
 <#= entity.GenerateDestructor() #>
-<#= entity.GenerateCreateRequestMethodPrototype() #>
+<#= entity.GenerateRequestMethodPrototype() #>
+<#= entity.GenerateNavigationRequestBuilderMethodPrototypes() #>
 	};
 }

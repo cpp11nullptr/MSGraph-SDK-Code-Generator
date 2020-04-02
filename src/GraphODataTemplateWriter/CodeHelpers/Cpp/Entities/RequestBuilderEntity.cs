@@ -5,7 +5,10 @@
 
 namespace Microsoft.Graph.ODataTemplateWriter.CodeHelpers.Cpp.Entities
 {
+    using System.Collections.Generic;
+    using System.Linq;
     using Microsoft.Graph.ODataTemplateWriter.CodeHelpers.Cpp.Helpers;
+    using Microsoft.Graph.ODataTemplateWriter.Extensions;
     using Vipr.Core.CodeModel;
 
     /// <summary>
@@ -26,7 +29,7 @@ namespace Microsoft.Graph.ODataTemplateWriter.CodeHelpers.Cpp.Entities
         /// <inheritdoc/>
         public override string GenerateIncludeStatements()
         {
-            string requestInterfaceEntityName = GetRequestInterfaceEntityName();
+            string requestEntityName = GetRequestEntityName();
             string requestBuilderInterfaceEntityName = GetRequestBuilderInterfaceEntityName();
 
             IncludeBlock includesBlock = new IncludeBlock();
@@ -35,12 +38,19 @@ namespace Microsoft.Graph.ODataTemplateWriter.CodeHelpers.Cpp.Entities
             includesBlock.AppendFile(IncludeFile.StdString, isSystem: true);
             includesBlock.AppendLine();
 
-            includesBlock.AppendFile($"{requestInterfaceEntityName}.h", isSystem: false);
-            includesBlock.AppendFile($"{requestBuilderInterfaceEntityName}.h", isSystem: false);
-            includesBlock.AppendLine();
-
             includesBlock.AppendFile(IncludeFile.GraphSdkBaseClientInterface, isSystem: false);
             includesBlock.AppendFile(IncludeFile.GraphSdkBaseRequestBuilder, isSystem: false);
+            includesBlock.AppendLine();
+
+            includesBlock.AppendFile($"{requestBuilderInterfaceEntityName}.h", isSystem: false);
+            includesBlock.AppendFile($"{requestEntityName}.h", isSystem: false);
+            includesBlock.AppendLine();
+
+            IEnumerable<string> navigationRequestBuilderIncludeStatements =
+                GenerateNavigationRequestBuilderIncludeStatements(isInterface: false);
+
+            includesBlock.AppendFiles(navigationRequestBuilderIncludeStatements, isSystem: false);
+            includesBlock.AppendLine();
 
             return includesBlock.ToString();
         }
@@ -54,9 +64,9 @@ namespace Microsoft.Graph.ODataTemplateWriter.CodeHelpers.Cpp.Entities
 
             using (CodeBlock codeBlock = new CodeBlock(1))
             {
-                codeBlock.AppendLine($"/// <summary>");
-                codeBlock.AppendLine($"/// A builder to create a request for {entityName} entity.");
-                codeBlock.AppendLine($"/// </summary>");
+                codeBlock.AppendLine($"/*");
+                codeBlock.AppendLine($" * A builder to create a request for {entityName} entity.");
+                codeBlock.AppendLine($" */");
                 codeBlock.AppendLine($"class {requestBuilderEntityName} final");
                 codeBlock.AppendLineShifted($": {baseClassesList}", newLine: false);
 
@@ -109,14 +119,14 @@ namespace Microsoft.Graph.ODataTemplateWriter.CodeHelpers.Cpp.Entities
         /// Generates the create request method.
         /// </summary>
         /// <returns>The string contains method definition.</returns>
-        public string GenerateCreateRequestMethod()
+        public string GenerateRequestMethod()
         {
             string requestEntityName = GetRequestEntityName();
             string requestInterfaceEntityName = GetRequestInterfaceEntityName();
 
             using (CodeBlock methodCodeBlock = new CodeBlock(2))
             {
-                methodCodeBlock.AppendLine($"std::unique_ptr<{requestInterfaceEntityName}> CreateRequest() noexcept override");
+                methodCodeBlock.AppendLine($"std::unique_ptr<{requestInterfaceEntityName}> Request() noexcept override");
 
                 using (CodeBlock bodyCodeBlock = new CodeBlock(methodCodeBlock))
                 {
@@ -131,12 +141,77 @@ namespace Microsoft.Graph.ODataTemplateWriter.CodeHelpers.Cpp.Entities
         }
 
         /// <summary>
+        /// Generates request builder methods to navigate into linked entities.
+        /// </summary>
+        /// <returns>The string contains request builder methods definitions.</returns>
+        public string GenerateNavigationRequestBuilderMethods()
+        {
+            OdcmClass odcmClass = GetOdcmTypeAsClass();
+            IEnumerable<OdcmProperty> navigationProperties = odcmClass.NavigationProperties();
+            int navigationPropertiesCount = navigationProperties.Count();
+
+            if (navigationPropertiesCount == 0)
+            {
+                return string.Empty;
+            }
+
+            IList<string> requestBuilderMethods = new List<string>(navigationPropertiesCount);
+
+            foreach (OdcmProperty navigationProperty in navigationProperties)
+            {
+                string requestBuilderMethod = GenerateNavigationRequestBuilderMethod(navigationProperty);
+
+                requestBuilderMethods.Add(requestBuilderMethod);
+            }
+
+            string requestBuilderMethodDefinitions = string.Join("\n", requestBuilderMethods);
+
+            return requestBuilderMethodDefinitions;
+        }
+
+        /// <summary>
         /// Gets a list of base entities for the request builder.
         /// </summary>
         /// <returns>The string contains base entities.</returns>
         private string GetBaseClassesList()
         {
             return $"public {GetRequestBuilderInterfaceEntityName()}, public BaseRequestBuilder";
+        }
+
+        /// <summary>
+        /// Generates the request builder method to navigate into linked entity.
+        /// </summary>
+        /// <param name="navigationProperty">The ODCM property contains navigation details.</param>
+        /// <returns>The string contains request builder method definitions.</returns>
+        private string GenerateNavigationRequestBuilderMethod(OdcmProperty navigationProperty)
+        {
+            string navigationEntityBaseName = NameConverter.CapitalizeName(navigationProperty.Name);
+            string navigationPath = navigationProperty.Name;
+
+            string navigationEntityName = navigationProperty.IsCollection ?
+                $"{GetEntityName()}{navigationEntityBaseName}Collection" :
+                navigationProperty.Name;
+
+            string navigationRequestBuilderEntityName =
+                GetRequestBuilderEntityName(navigationEntityName);
+
+            string navigationRequestBuilderInterfaceEntityName =
+                GetRequestBuilderInterfaceEntityName(navigationEntityName);
+
+            using (CodeBlock methodCodeBlock = new CodeBlock(2))
+            {
+                methodCodeBlock.AppendLine($"std::unique_ptr<{navigationRequestBuilderInterfaceEntityName}> {navigationEntityBaseName}() noexcept override");
+
+                using (CodeBlock bodyCodeBlock = new CodeBlock(methodCodeBlock))
+                {
+                    bodyCodeBlock.AppendLine($"const std::wstring& navigationUrl{{ ExtendBaseUrl(\"{navigationPath}\") }};");
+                    bodyCodeBlock.AppendLine("IBaseClient& baseClient{ GetBaseClient() };");
+                    bodyCodeBlock.AppendLine();
+                    bodyCodeBlock.AppendLine($"return std::make_unique<{navigationRequestBuilderEntityName}>(navigationUrl, baseClient);");
+                }
+
+                return methodCodeBlock.ToString();
+            }
         }
     }
 }

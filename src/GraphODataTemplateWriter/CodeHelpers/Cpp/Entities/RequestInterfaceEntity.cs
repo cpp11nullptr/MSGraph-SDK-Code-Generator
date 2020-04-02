@@ -34,6 +34,7 @@ namespace Microsoft.Graph.ODataTemplateWriter.CodeHelpers.Cpp.Entities
             includesBlock.AppendLine();
 
             includesBlock.AppendFile($"{entityName}.h", isSystem: false);
+            includesBlock.AppendLine();
 
             return includesBlock.ToString();
         }
@@ -46,9 +47,9 @@ namespace Microsoft.Graph.ODataTemplateWriter.CodeHelpers.Cpp.Entities
 
             using (CodeBlock codeBlock = new CodeBlock(1))
             {
-                codeBlock.AppendLine($"/// <summary>");
-                codeBlock.AppendLine($"/// An interface of a request for {entityName} entity.");
-                codeBlock.AppendLine($"/// </summary>");
+                codeBlock.AppendLine($"/*");
+                codeBlock.AppendLine($" * An interface of a request for {entityName} entity.");
+                codeBlock.AppendLine($" */");
                 codeBlock.AppendLine($"struct {requestInterfaceEntityName}", newLine: false);
 
                 return codeBlock.ToString();

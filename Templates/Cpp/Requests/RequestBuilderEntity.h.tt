@@ -16,6 +16,7 @@
 	public:
 <#= entity.GenerateConstructor() #>
 <#= entity.GenerateDestructor() #>
-<#= entity.GenerateCreateRequestMethod() #>
+<#= entity.GenerateRequestMethod() #>
+<#= entity.GenerateNavigationRequestBuilderMethods() #>
 	};
 }

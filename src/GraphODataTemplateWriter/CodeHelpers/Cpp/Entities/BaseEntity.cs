@@ -74,18 +74,19 @@ namespace Microsoft.Graph.ODataTemplateWriter.CodeHelpers.Cpp.Entities
         }
 
         /// <summary>
-        /// Contstructs an entity name.
+        /// Constructs an entity name.
         /// </summary>
+        /// <param name="odcmTypeName">The name of ODCM type to be used.</param>
         /// <returns>The constructed entity name.</returns>
-        protected string GetEntityName()
+        protected string GetEntityName(string odcmTypeName = null)
         {
-            string odcmTypeName = GetOdcmType().Name;
+            string odcmTypeNameToUse = odcmTypeName != null ? odcmTypeName : GetOdcmType().Name;
 
-            return NameConverter.CapitalizeName(odcmTypeName);
+            return NameConverter.CapitalizeName(odcmTypeNameToUse);
         }
 
         /// <summary>
-        /// Contstructs an base entity name.
+        /// Constructs an base entity name.
         /// </summary>
         /// <returns>The constructed base entity name.</returns>
         protected string GetBaseEntityName()
