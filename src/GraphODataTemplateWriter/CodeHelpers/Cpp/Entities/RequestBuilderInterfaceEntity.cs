@@ -12,7 +12,7 @@ namespace Microsoft.Graph.ODataTemplateWriter.CodeHelpers.Cpp.Entities
     using Vipr.Core.CodeModel;
 
     /// <summary>
-    /// A request builder interface.
+    /// A request builder interface entity.
     /// </summary>
     public sealed class RequestBuilderInterfaceEntity : BaseRequestEntity
     {
@@ -22,7 +22,7 @@ namespace Microsoft.Graph.ODataTemplateWriter.CodeHelpers.Cpp.Entities
         /// </summary>
         /// <param name="odcmClass">The ODCM class.</param>
         public RequestBuilderInterfaceEntity(OdcmClass odcmClass)
-            : base(odcmClass)
+            : base(odcmClass, isAbstract: true)
         {
         }
 
@@ -49,37 +49,16 @@ namespace Microsoft.Graph.ODataTemplateWriter.CodeHelpers.Cpp.Entities
         }
 
         /// <inheritdoc/>
-        public override string GenerateEntityHeader()
-        {
-            string entityName = GetEntityName();
-            string requestBuilderInterfaceEntityName = GetRequestBuilderInterfaceEntityName();
+        protected override string GetFullEntityName() => $"I{GetEntityName()}RequestBuilder";
 
-            using (CodeBlock headerBlock = new CodeBlock(1))
-            {
-                headerBlock.AppendLine($"/*");
-                headerBlock.AppendLine($" * An interface of a builder to create a request for {entityName} entity.");
-                headerBlock.AppendLine($" */");
-                headerBlock.AppendLine($"struct {requestBuilderInterfaceEntityName}", newLine: false);
+        /// <inheritdoc/>
+        protected override string GetBasePrimaryEntityName() => string.Empty;
 
-                return headerBlock.ToString();
-            }
-        }
+        /// <inheritdoc/>
+        protected override string GetBaseInterfaceEntityName() => "IBaseRequestBuilder";
 
-        /// <summary>
-        /// Generates the request builder interface destructor declaration.
-        /// </summary>
-        /// <returns>The string contains destructor declaration.</returns>
-        public string GenerateDestructor()
-        {
-            string requestBuilderInterfaceEntityName = GetRequestBuilderInterfaceEntityName();
-
-            using (CodeBlock methodCodeBlock = new CodeBlock(2))
-            {
-                methodCodeBlock.AppendLine($"virtual ~{requestBuilderInterfaceEntityName}() noexcept = default;");
-
-                return methodCodeBlock.ToString();
-            }
-        }
+        /// <inheritdoc/>
+        protected override string GetEntityHeaderComment() => $"An interface of a builder to create a request for {GetEntityName()} entity";
 
         /// <summary>
         /// Generates the create request method declaration.

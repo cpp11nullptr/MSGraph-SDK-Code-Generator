@@ -9,17 +9,17 @@ namespace Microsoft.Graph.ODataTemplateWriter.CodeHelpers.Cpp.Entities
     using Vipr.Core.CodeModel;
 
     /// <summary>
-    /// A collection request builder entity.
+    /// A collection page interface.
     /// </summary>
-    public sealed class CollectionRequestBuilderEntity : BaseCollectionRequestEntity
+    public sealed class CollectionPageInterfaceEntity : BaseCollectionRequestEntity
     {
         /// <summary>
-        /// Instantiates a new instance of <see cref="CollectionRequestBuilderEntity"/> class
+        /// Instantiates a new instance of <see cref="CollectionPageInterfaceEntity"/> class
         /// based on passed ODCM property.
         /// </summary>
         /// <param name="odcmProperty">The ODCM property.</param>
-        public CollectionRequestBuilderEntity(OdcmProperty odcmProperty)
-            : base(odcmProperty, isAbstract: false)
+        public CollectionPageInterfaceEntity(OdcmProperty odcmProperty)
+            : base(odcmProperty, isAbstract: true)
         {
         }
 
@@ -30,15 +30,15 @@ namespace Microsoft.Graph.ODataTemplateWriter.CodeHelpers.Cpp.Entities
         }
 
         /// <inheritdoc/>
-        protected override string GetFullEntityNameSuffix() => "RequestBuilder";
+        protected override string GetFullEntityNameSuffix() => "Page";
 
         /// <inheritdoc/>
-        protected override string GetBasePrimaryEntityName() => "BaseRequestBuilder";
+        protected override string GetBasePrimaryEntityName() => string.Empty;
 
         /// <inheritdoc/>
-        protected override string GetBaseInterfaceEntityName() => $"I{GetFullEntityName()}";
+        protected override string GetBaseInterfaceEntityName() => $"ICollectionPage<{GetEntityName()}>";
 
         /// <inheritdoc/>
-        protected override string GetEntityHeaderComment() => $"A request builder for {GetEntityName()} collection for {GetSuperClassEntityName()} entity";
+        protected override string GetEntityHeaderComment() => $"An interface of a page of {GetEntityName()} collection for {GetSuperClassEntityName()} entity";
     }
 }

@@ -11,7 +11,7 @@ namespace Microsoft.Graph.ODataTemplateWriter.CodeHelpers.Cpp.Entities
     /// <summary>
     /// A collection page entity.
     /// </summary>
-    public sealed class CollectionPageEntity : BaseRequestEntity
+    public sealed class CollectionPageEntity : BaseCollectionRequestEntity
     {
         /// <summary>
         /// Instantiates a new instance of <see cref="CollectionPageEntity"/> class
@@ -19,7 +19,7 @@ namespace Microsoft.Graph.ODataTemplateWriter.CodeHelpers.Cpp.Entities
         /// </summary>
         /// <param name="odcmProperty">The ODCM property.</param>
         public CollectionPageEntity(OdcmProperty odcmProperty)
-            : base(odcmProperty)
+            : base(odcmProperty, isAbstract: false)
         {
         }
 
@@ -30,22 +30,15 @@ namespace Microsoft.Graph.ODataTemplateWriter.CodeHelpers.Cpp.Entities
         }
 
         /// <inheritdoc/>
-        public override string GenerateEntityHeader()
-        {
-            string entityName = GetEntityName();
-            string collectionBaseEntityName = GetCollectionBaseEntityName();
-            string collectionEntityName = GetCollectionEntityName();
-            string collectionPageEntityName = $"{collectionEntityName}Page";
+        protected override string GetFullEntityNameSuffix() => "Page";
 
-            using (CodeBlock headerBlock = new CodeBlock(1))
-            {
-                headerBlock.AppendLine($"/*");
-                headerBlock.AppendLine($" * A page for {entityName} collection for {collectionBaseEntityName} entity.");
-                headerBlock.AppendLine($" */");
-                headerBlock.AppendLine($"class {collectionPageEntityName} final", newLine: false);
+        /// <inheritdoc/>
+        protected override string GetBasePrimaryEntityName() => $"CollectionPage<{GetEntityName()}>";
 
-                return headerBlock.ToString();
-            }
-        }
+        /// <inheritdoc/>
+        protected override string GetBaseInterfaceEntityName() => $"I{GetFullEntityName()}";
+
+        /// <inheritdoc/>
+        protected override string GetEntityHeaderComment() => $"A page of {GetEntityName()} collection for {GetSuperClassEntityName()} entity";
     }
 }

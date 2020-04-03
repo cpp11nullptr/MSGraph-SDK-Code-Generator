@@ -11,7 +11,7 @@ namespace Microsoft.Graph.ODataTemplateWriter.CodeHelpers.Cpp.Entities
     /// <summary>
     /// A collection response entity.
     /// </summary>
-    public sealed class CollectionResponseEntity : BaseRequestEntity
+    public sealed class CollectionResponseEntity : BaseCollectionRequestEntity
     {
         /// <summary>
         /// Instantiates a new instance of <see cref="CollectionResponseEntity"/> class
@@ -19,7 +19,7 @@ namespace Microsoft.Graph.ODataTemplateWriter.CodeHelpers.Cpp.Entities
         /// </summary>
         /// <param name="odcmProperty">The ODCM property.</param>
         public CollectionResponseEntity(OdcmProperty odcmProperty)
-            : base(odcmProperty)
+            : base(odcmProperty, isAbstract: false)
         {
         }
 
@@ -30,22 +30,15 @@ namespace Microsoft.Graph.ODataTemplateWriter.CodeHelpers.Cpp.Entities
         }
 
         /// <inheritdoc/>
-        public override string GenerateEntityHeader()
-        {
-            string entityName = GetEntityName();
-            string collectionBaseEntityName = GetCollectionBaseEntityName();
-            string collectionEntityName = GetCollectionEntityName();
-            string collectionRequestBuildEntityName = $"{collectionEntityName}Response";
+        protected override string GetFullEntityNameSuffix() => "Response";
 
-            using (CodeBlock headerBlock = new CodeBlock(1))
-            {
-                headerBlock.AppendLine($"/*");
-                headerBlock.AppendLine($" * A response for {entityName} collection for {collectionBaseEntityName} entity.");
-                headerBlock.AppendLine($" */");
-                headerBlock.AppendLine($"class {collectionRequestBuildEntityName} final", newLine: false);
+        /// <inheritdoc/>
+        protected override string GetBasePrimaryEntityName() => string.Empty;
 
-                return headerBlock.ToString();
-            }
-        }
+        /// <inheritdoc/>
+        protected override string GetBaseInterfaceEntityName() => string.Empty;
+
+        /// <inheritdoc/>
+        protected override string GetEntityHeaderComment() => $"A response for {GetEntityName()} collection for {GetSuperClassEntityName()} entity";
     }
 }

@@ -1,9 +1,9 @@
 ﻿<# // Copyright (c) Microsoft Corporation.  All Rights Reserved.  Licensed under the MIT License.  See License in the project root for license information. #>
 <#@ template debug="true" hostspecific="true" language="C#" #>
 <#@ include file="SharedCpp.template.tt" #>
-// Template Source: Templates\Cpp\Requests\CollectionRequestEntity.h.tt
+// Template Source: Templates\Cpp\Requests\ICollectionPageEntity.h.tt
 <#
-	var entity = host.CurrentType.AsOdcmProperty().ToCollectionRequestEntity();
+	var entity = host.CurrentType.AsOdcmProperty().ToCollectionPageInterfaceEntity();
 #>
 
 #pragma once
@@ -13,8 +13,6 @@
 {
 <#= entity.GenerateEntityHeader() #>
 	{
-	public:
-<#= entity.GenerateConstructor() #>
 <#= entity.GenerateDestructor() #>
 	};
 }

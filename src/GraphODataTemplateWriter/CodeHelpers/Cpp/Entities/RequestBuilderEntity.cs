@@ -22,7 +22,7 @@ namespace Microsoft.Graph.ODataTemplateWriter.CodeHelpers.Cpp.Entities
         /// </summary>
         /// <param name="odcmClass">The ODCM class.</param>
         public RequestBuilderEntity(OdcmClass odcmClass)
-            : base(odcmClass)
+            : base(odcmClass, isAbstract: false)
         {
         }
 
@@ -56,64 +56,16 @@ namespace Microsoft.Graph.ODataTemplateWriter.CodeHelpers.Cpp.Entities
         }
 
         /// <inheritdoc/>
-        public override string GenerateEntityHeader()
-        {
-            string entityName = GetEntityName();
-            string requestBuilderEntityName = GetRequestBuilderEntityName();
-            string baseClassesList = GetBaseClassesList();
+        protected override string GetFullEntityName() => $"{GetEntityName()}RequestBuilder";
 
-            using (CodeBlock headerBlock = new CodeBlock(1))
-            {
-                headerBlock.AppendLine($"/*");
-                headerBlock.AppendLine($" * A builder to create a request for {entityName} entity.");
-                headerBlock.AppendLine($" */");
-                headerBlock.AppendLine($"class {requestBuilderEntityName} final");
-                headerBlock.AppendLineShifted($": {baseClassesList}", newLine: false);
+        /// <inheritdoc/>
+        protected override string GetBasePrimaryEntityName() => "BaseRequestBuilder";
 
-                return headerBlock.ToString();
-            }
-        }
+        /// <inheritdoc/>
+        protected override string GetBaseInterfaceEntityName() => $"I{GetFullEntityName()}";
 
-        /// <summary>
-        /// Generates the request builder contructor.
-        /// </summary>
-        /// <returns>The string contains constructor definition.</returns>
-        public string GenerateConstructor()
-        {
-            string requestBuilderEntityName = GetRequestBuilderEntityName();
-
-            using (CodeBlock methodCodeBlock = new CodeBlock(2))
-            {
-                methodCodeBlock.AppendLine($"explicit {requestBuilderEntityName}(const std::wstring& requestUrl, IBaseClient& baseClient) noexcept");
-                methodCodeBlock.AppendLineShifted(": BaseRequestBuilder{ requestUrl, baseClient }");
-
-                using (CodeBlock bodyCodeBlock = new CodeBlock(methodCodeBlock))
-                {
-                }
-
-                return methodCodeBlock.ToString();
-            }
-        }
-
-        /// <summary>
-        /// Generates a request builder destructor.
-        /// </summary>
-        /// <returns>The string contains destructor definition.</returns>
-        public string GenerateDestructor()
-        {
-            string requestBuilderEntityName = GetRequestBuilderEntityName();
-
-            using (CodeBlock methodCodeBlock = new CodeBlock(2))
-            {
-                methodCodeBlock.AppendLine($"~{requestBuilderEntityName}() noexcept override");
-
-                using (CodeBlock bodyCodeBlock = new CodeBlock(methodCodeBlock))
-                {
-                }
-
-                return methodCodeBlock.ToString();
-            }
-        }
+        /// <inheritdoc/>
+        protected override string GetEntityHeaderComment() => $"A builder to create a request for {GetEntityName()} entity";
 
         /// <summary>
         /// Generates the create request method.
@@ -167,15 +119,6 @@ namespace Microsoft.Graph.ODataTemplateWriter.CodeHelpers.Cpp.Entities
             string requestBuilderMethodDefinitions = string.Join("\n", requestBuilderMethods);
 
             return requestBuilderMethodDefinitions;
-        }
-
-        /// <summary>
-        /// Gets a list of base entities for the request builder.
-        /// </summary>
-        /// <returns>The string contains base entities.</returns>
-        private string GetBaseClassesList()
-        {
-            return $"public {GetRequestBuilderInterfaceEntityName()}, public BaseRequestBuilder";
         }
 
         /// <summary>

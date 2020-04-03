@@ -13,5 +13,7 @@
 {
 <#= entity.GenerateEntityHeader() #>
 	{
+	public:
+
 	};
 }
