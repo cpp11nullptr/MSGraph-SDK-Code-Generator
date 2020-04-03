@@ -56,10 +56,10 @@ namespace Microsoft.Graph.ODataTemplateWriter.CodeHelpers.Cpp.Entities
 
                 if (HasBaseEntity())
                 {
-                    string baseEntityName = GetBaseEntityName();
+                    string basePrimaryEntityName = GetBasePrimaryEntityName();
 
                     codeBlock.AppendLine($"class {entityName}");
-                    codeBlock.AppendLineShifted($": public {baseEntityName}", newLine: false);
+                    codeBlock.AppendLineShifted($": public {basePrimaryEntityName}", newLine: false);
                 }
                 else
                 {
@@ -160,9 +160,9 @@ namespace Microsoft.Graph.ODataTemplateWriter.CodeHelpers.Cpp.Entities
                 {
                     if (hasBaseEntity)
                     {
-                        string baseEntityName = GetBaseEntityName();
+                        string basePrimaryEntityName = GetBasePrimaryEntityName();
 
-                        WriteDeserializeSinglePropertyBlock(bodyCodeBlock, propertyValue: "jsonValue", memberName: $"static_cast<{baseEntityName}&>(object)");
+                        WriteDeserializeSinglePropertyBlock(bodyCodeBlock, propertyValue: "jsonValue", memberName: $"static_cast<{basePrimaryEntityName}&>(object)");
 
                         bodyCodeBlock.AppendLine();
                     }
@@ -225,9 +225,9 @@ namespace Microsoft.Graph.ODataTemplateWriter.CodeHelpers.Cpp.Entities
 
             if (HasBaseEntity())
             {
-                string baseEntityName = GetBaseEntityName();
+                string basePrimaryEntityName = GetBasePrimaryEntityName();
 
-                membersTypes.Add(baseEntityName);
+                membersTypes.Add(basePrimaryEntityName);
             }
             else
             {

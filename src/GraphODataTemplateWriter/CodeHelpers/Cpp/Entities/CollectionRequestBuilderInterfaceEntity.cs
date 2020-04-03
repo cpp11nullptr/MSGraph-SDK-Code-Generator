@@ -9,17 +9,17 @@ namespace Microsoft.Graph.ODataTemplateWriter.CodeHelpers.Cpp.Entities
     using Vipr.Core.CodeModel;
 
     /// <summary>
-    /// A collection request builder entity.
+    /// A collection request builder interface entity.
     /// </summary>
-    public sealed class CollectionRequestBuilderEntity : BaseCollectionRequestEntity
+    public sealed class CollectionRequestBuilderInterfaceEntity : BaseCollectionRequestEntity
     {
         /// <summary>
         /// Instantiates a new instance of <see cref="CollectionRequestBuilderEntity"/> class
         /// based on passed ODCM property.
         /// </summary>
         /// <param name="odcmProperty">The ODCM property.</param>
-        public CollectionRequestBuilderEntity(OdcmProperty odcmProperty)
-            : base(odcmProperty, isAbstract: false)
+        public CollectionRequestBuilderInterfaceEntity(OdcmProperty odcmProperty)
+            : base(odcmProperty, isAbstract: true)
         {
         }
 
@@ -30,15 +30,15 @@ namespace Microsoft.Graph.ODataTemplateWriter.CodeHelpers.Cpp.Entities
         }
 
         /// <inheritdoc/>
-        protected override string GetFullEntityNameSuffix() => "RequestBuilder";
+        protected override string GetFullEntityNameSuffix() => $"RequestBuilder";
 
         /// <inheritdoc/>
-        protected override string GetBasePrimaryEntityName() => "BaseRequestBuilder";
+        protected override string GetBasePrimaryEntityName() => string.Empty;
 
         /// <inheritdoc/>
-        protected override string GetBaseInterfaceEntityName() => $"I{GetFullEntityName()}";
+        protected override string GetBaseInterfaceEntityName() => "IBaseRequestBuilder";
 
         /// <inheritdoc/>
-        protected override string GetEntityHeaderComment() => $"A request builder for {GetEntityName()} collection for {GetSuperClassEntityName()} entity";
+        protected override string GetEntityHeaderComment() => $"An interface of a request builder for {GetEntityName()} collection for {GetSuperClassEntityName()} entity";
     }
 }

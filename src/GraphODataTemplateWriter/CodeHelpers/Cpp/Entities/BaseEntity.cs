@@ -6,6 +6,8 @@
 namespace Microsoft.Graph.ODataTemplateWriter.CodeHelpers.Cpp.Entities
 {
     using System;
+    using System.Collections.Generic;
+    using System.Linq;
     using Microsoft.Graph.ODataTemplateWriter.CodeHelpers.Cpp.Helpers;
     using Vipr.Core.CodeModel;
 
@@ -66,6 +68,76 @@ namespace Microsoft.Graph.ODataTemplateWriter.CodeHelpers.Cpp.Entities
         }
 
         /// <summary>
+        /// Constructs full name of entity.
+        /// </summary>
+        /// <remarks>
+        /// For compound entities it can be different from the entity name, e.g. the full name for
+        /// ODCM property will be constructed based on its underlying ODCM class name.
+        /// </remarks>
+        /// <returns>The constructed full name of entity.</returns>
+        protected virtual string GetFullEntityName()
+        {
+            return GetEntityName();
+        }
+
+        /// <summary>
+        /// Constructs a base primary entity name.
+        /// </summary>
+        /// <remarks>
+        /// It is marked as a virtual function for cases when a base entity does not match
+        /// defined in ODCM structure.
+        /// </remarks>
+        /// <returns>The constructed base primary entity name.</returns>
+        protected virtual string GetBasePrimaryEntityName()
+        {
+            if (!HasBaseEntity())
+            {
+                return string.Empty;
+            }
+
+            string odcmBaseEntityName = GetOdcmTypeAsClass().Base.Name;
+
+            return NameConverter.CapitalizeName(odcmBaseEntityName);
+        }
+
+        /// <summary>
+        /// Constructs a base interface entity name.
+        /// </summary>
+        /// <returns>The constructed base interface entity name.</returns>
+        protected virtual string GetBaseInterfaceEntityName()
+        {
+            string fullEntityName = GetFullEntityName();
+
+            return $"I{fullEntityName}";
+        }
+
+        /// <summary>
+        /// Gets a list of base entity names.
+        /// </summary>
+        /// <returns>The list contains base entity names.</returns>
+        protected IEnumerable<string> GetBaseEntityNames()
+        {
+            string basePrimaryEntityName = GetBasePrimaryEntityName();
+            string baseInterfaceEntityName = GetBaseInterfaceEntityName();
+
+            if (string.IsNullOrWhiteSpace(baseInterfaceEntityName) &&
+                string.IsNullOrWhiteSpace(baseInterfaceEntityName))
+            {
+                return Enumerable.Empty<string>();
+            }
+            else if (string.IsNullOrWhiteSpace(baseInterfaceEntityName))
+            {
+                return new[] { basePrimaryEntityName };
+            }
+            else if (string.IsNullOrWhiteSpace(basePrimaryEntityName))
+            {
+                return new[] { baseInterfaceEntityName };
+            }
+
+            return new[] { baseInterfaceEntityName, basePrimaryEntityName };
+        }
+
+        /// <summary>
         /// Constructs namespace name where the entity is located.
         /// </summary>
         /// <returns>The constructed namespace name.</returns>
@@ -95,22 +167,6 @@ namespace Microsoft.Graph.ODataTemplateWriter.CodeHelpers.Cpp.Entities
             string odcmTypeNameToUse = odcmTypeName != null ? odcmTypeName : GetOdcmType().Name;
 
             return NameConverter.CapitalizeName(odcmTypeNameToUse);
-        }
-
-        /// <summary>
-        /// Constructs an base entity name.
-        /// </summary>
-        /// <returns>The constructed base entity name.</returns>
-        protected string GetBaseEntityName()
-        {
-            if (!HasBaseEntity())
-            {
-                return string.Empty;
-            }
-
-            string odcmBaseEntityName = GetOdcmTypeAsClass().Base.Name;
-
-            return NameConverter.CapitalizeName(odcmBaseEntityName);
         }
 
         /// <summary>

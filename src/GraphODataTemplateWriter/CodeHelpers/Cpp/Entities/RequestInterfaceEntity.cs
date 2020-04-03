@@ -9,7 +9,7 @@ namespace Microsoft.Graph.ODataTemplateWriter.CodeHelpers.Cpp.Entities
     using Vipr.Core.CodeModel;
 
     /// <summary>
-    /// A C++ request interface.
+    /// A request interface entity.
     /// </summary>
     public sealed class RequestInterfaceEntity : BaseRequestEntity
     {
@@ -19,7 +19,7 @@ namespace Microsoft.Graph.ODataTemplateWriter.CodeHelpers.Cpp.Entities
         /// </summary>
         /// <param name="odcmClass">The ODCM class.</param>
         public RequestInterfaceEntity(OdcmClass odcmClass)
-            : base(odcmClass)
+            : base(odcmClass, isAbstract: true)
         {
         }
 
@@ -40,37 +40,16 @@ namespace Microsoft.Graph.ODataTemplateWriter.CodeHelpers.Cpp.Entities
         }
 
         /// <inheritdoc/>
-        public override string GenerateEntityHeader()
-        {
-            string entityName = GetEntityName();
-            string requestInterfaceEntityName = GetRequestInterfaceEntityName();
+        protected override string GetFullEntityName() => $"I{GetEntityName()}Request";
 
-            using (CodeBlock headerBlock = new CodeBlock(1))
-            {
-                headerBlock.AppendLine($"/*");
-                headerBlock.AppendLine($" * An interface of a request for {entityName} entity.");
-                headerBlock.AppendLine($" */");
-                headerBlock.AppendLine($"struct {requestInterfaceEntityName}", newLine: false);
+        /// <inheritdoc/>
+        protected override string GetBasePrimaryEntityName() => string.Empty;
 
-                return headerBlock.ToString();
-            }
-        }
+        /// <inheritdoc/>
+        protected override string GetBaseInterfaceEntityName() => "IBaseRequest";
 
-        /// <summary>
-        /// Generates the request interface destructor declaration.
-        /// </summary>
-        /// <returns>The string contains destructor declaration.</returns>
-        public string GenerateDestructor()
-        {
-            string requestInterfaceEntityName = GetRequestInterfaceEntityName();
-
-            using (CodeBlock methodCodeBlock = new CodeBlock(2))
-            {
-                methodCodeBlock.AppendLine($"virtual ~{requestInterfaceEntityName}() noexcept = default;");
-
-                return methodCodeBlock.ToString();
-            }
-        }
+        /// <inheritdoc/>
+        protected override string GetEntityHeaderComment() => $"An interface of a request for {GetEntityName()} entity";
 
         /// <summary>
         /// Generates the get method declaration.

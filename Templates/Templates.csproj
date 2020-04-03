@@ -140,6 +140,10 @@
     <Content Include="Cpp\Requests\CollectionRequestBuilderEntity.h.tt" />
     <Content Include="Cpp\Requests\CollectionRequestEntity.h.tt" />
     <Content Include="Cpp\Requests\CollectionResponseEntity.h.tt" />
+    <Content Include="Cpp\Requests\GraphClientEntity.h.tt" />
+    <Content Include="Cpp\Requests\ICollectionPageEntity.h.tt" />
+    <Content Include="Cpp\Requests\ICollectionRequestBuilderEntity.h.tt" />
+    <Content Include="Cpp\Requests\ICollectionRequestEntity.h.tt" />
     <Content Include="Cpp\Requests\IRequestBuilderEntity.h.tt" />
     <Content Include="Cpp\Requests\IRequestEntity.h.tt" />
     <Content Include="Cpp\Requests\RequestBuilderEntity.h.tt" />
