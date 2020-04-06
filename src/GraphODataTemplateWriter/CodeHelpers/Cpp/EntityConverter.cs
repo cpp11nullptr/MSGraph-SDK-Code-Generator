@@ -5,6 +5,7 @@
 
 namespace Microsoft.Graph.ODataTemplateWriter.CodeHelpers.Cpp
 {
+    using System.Collections.Generic;
     using Microsoft.Graph.ODataTemplateWriter.CodeHelpers.Cpp.Entities;
     using Vipr.Core.CodeModel;
 
@@ -84,6 +85,15 @@ namespace Microsoft.Graph.ODataTemplateWriter.CodeHelpers.Cpp
         /// <returns>The collection response entity instance.</returns>
         public static CollectionResponseEntity ToCollectionResponseEntity(this OdcmProperty odcmProperty) =>
             new CollectionResponseEntity(odcmProperty);
+
+        /// <summary>
+        /// Creates a graph client entity.
+        /// </summary>
+        /// <param name="odcmClass">The ODCM class instance.</param>
+        /// <param name="odcmLinkedEntities">A list of linked entities.</param>
+        /// <returns>The graph client entity instance.</returns>
+        public static GraphClientEntity ToGraphClientEntity(this OdcmClass odcmClass, IEnumerable<OdcmProperty> odcmLinkedEntities) =>
+            new GraphClientEntity(odcmClass, odcmLinkedEntities);
 
         /// <summary>
         /// Creates a request builder entity.

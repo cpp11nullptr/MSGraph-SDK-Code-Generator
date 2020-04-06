@@ -228,6 +228,73 @@ namespace Microsoft.Graph.ODataTemplateWriter.CodeHelpers.Cpp.Entities
         }
 
         /// <summary>
+        /// Generates request builder methods for linked entities.
+        /// </summary>
+        /// <param name="odcmProperties">The list of ODCM properties contain linked entity details.</param>
+        /// <returns>The string contains request builder method definitions.</returns>
+        protected string GenerateLinkedRequestBuilderMethods(IEnumerable<OdcmProperty> odcmProperties)
+        {
+            int propertiesCount = odcmProperties.Count();
+
+            if (propertiesCount == 0)
+            {
+                return string.Empty;
+            }
+
+            IList<string> requestBuilderMethods = new List<string>(propertiesCount);
+
+            foreach (OdcmProperty odcmProperty in odcmProperties)
+            {
+                string requestBuilderMethod = GenerateLinkedRequestBuilderMethod(odcmProperty);
+
+                requestBuilderMethods.Add(requestBuilderMethod);
+            }
+
+            return string.Join("\n", requestBuilderMethods);
+        }
+
+        /// <summary>
+        /// Generates the request builder method for linked entity.
+        /// </summary>
+        /// <param name="odcmProperty">The ODCM property contains linked entity details.</param>
+        /// <returns>The string contains request builder method definition.</returns>
+        protected string GenerateLinkedRequestBuilderMethod(OdcmProperty odcmProperty)
+        {
+            string linkedEntityBaseName = NameConverter.CapitalizeName(odcmProperty.Name);
+            string linkedEntityPath = odcmProperty.Name;
+
+            string linkedEntityName = odcmProperty.IsCollection ?
+                $"{GetEntityName()}{linkedEntityBaseName}Collection" :
+                odcmProperty.Name;
+
+            string linkedRequestBuilderEntityName =
+                GetRequestBuilderEntityName(linkedEntityName);
+
+            string linkedRequestBuilderInterfaceEntityName =
+                GetRequestBuilderInterfaceEntityName(linkedEntityName);
+
+            using (CodeBlock methodCodeBlock = new CodeBlock(2))
+            {
+                methodCodeBlock.AppendLine($"std::unique_ptr<{linkedRequestBuilderInterfaceEntityName}> {linkedEntityBaseName}() noexcept override");
+
+                using (CodeBlock bodyCodeBlock = new CodeBlock(methodCodeBlock))
+                {
+                    bodyCodeBlock.AppendLine($"const std::wstring& requestUrl{{ ExtendBaseUrl(\"{linkedEntityPath}\") }};");
+
+                    bodyCodeBlock.AppendLine(
+                        this is GraphClientEntity ?
+                            "IBaseClient& baseClient{ *this };" :
+                            "IBaseClient& baseClient{ GetBaseClient() };");
+
+                    bodyCodeBlock.AppendLine();
+                    bodyCodeBlock.AppendLine($"return std::make_unique<{linkedRequestBuilderEntityName}>(requestUrl, baseClient);");
+                }
+
+                return methodCodeBlock.ToString();
+            }
+        }
+
+        /// <summary>
         /// Whether the entity is an abstract type.
         /// </summary>
         protected readonly bool isAbstract;

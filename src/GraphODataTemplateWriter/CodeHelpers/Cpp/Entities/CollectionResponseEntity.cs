@@ -5,7 +5,6 @@
 
 namespace Microsoft.Graph.ODataTemplateWriter.CodeHelpers.Cpp.Entities
 {
-    using Microsoft.Graph.ODataTemplateWriter.CodeHelpers.Cpp.Helpers;
     using Vipr.Core.CodeModel;
 
     /// <summary>
