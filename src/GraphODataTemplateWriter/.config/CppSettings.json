@@ -2,22 +2,13 @@
   "StaticCodePrefix": "MS",
   "NamespacePrefix": "MSGraph",
   "TemplateMapping": {
-    "Shared": [
-      {
-        "_Comment": "HACK: It seems the entire 'Shared' section is copy pasted from TemplateWriterSettings.json",
-        "_Comment2": "with the sole purpose of preventing the Client from being named 'MSGraphGraphServiceClient'.",
-        "_Comment3": "TODO: Do we need it for C++ entities?",
-        "Template": "GraphClientEntity",
-        "SubProcessor": "EntityContainer",
-        "Type": "Client",
-        "Name": "GraphClientEntity"
-      }
-    ],
     "Cpp": [
       { "Template": "ClientModels", "SubProcessor": "Other", "Type": "Model", "Name": "ClientModels" },
       { "Template": "ModelEnumEntity", "SubProcessor": "EnumType", "Type": "Model", "Name": "<Class>" },
       { "Template": "ModelTypeEntity", "SubProcessor": "EntityType", "Type": "Model", "Name": "<Class>" },
       { "Template": "ModelTypeEntity", "SubProcessor": "ComplexType", "Type": "Model", "Name": "<Class>" },
+      { "Template": "IGraphClientEntity", "SubProcessor": "EntityContainer", "Type": "Client", "Name": "IGraphClientEntity" },
+      { "Template": "GraphClientEntity", "SubProcessor": "EntityContainer", "Type": "Client", "Name": "GraphClientEntity" },
       { "Template": "ICollectionPageEntity", "SubProcessor": "NavigationCollectionProperty", "Type": "Request", "Name": "I<Class><Property>CollectionPage" },
       { "Template": "CollectionPageEntity", "SubProcessor": "NavigationCollectionProperty", "Type": "Request", "Name": "<Class><Property>CollectionPage" },
       { "Template": "ICollectionRequestBuilderEntity", "SubProcessor": "NavigationCollectionProperty", "Type": "Request", "Name": "I<Class><Property>CollectionRequestBuilder" },

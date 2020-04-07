@@ -8,7 +8,6 @@ namespace Microsoft.Graph.ODataTemplateWriter.CodeHelpers.Cpp.Entities
     using System.Collections.Generic;
     using System.Linq;
     using Microsoft.Graph.ODataTemplateWriter.CodeHelpers.Cpp.Helpers;
-    using Microsoft.Graph.ODataTemplateWriter.Extensions;
     using Vipr.Core.CodeModel;
 
     /// <summary>
@@ -188,40 +187,43 @@ namespace Microsoft.Graph.ODataTemplateWriter.CodeHelpers.Cpp.Entities
         }
 
         /// <summary>
-        /// Generates include statements needed for navigation request builders.
+        /// Generates include statements needed for linked request builders.
         /// </summary>
         /// <param name="isInterface">
         /// True if include statements should be generated for interfaces or False if
         /// include statements should generated for implemented entities.
         /// </param>
         /// <returns>The list contains include statements.</returns>
-        protected IEnumerable<string> GenerateNavigationRequestBuilderIncludeStatements(bool isInterface)
+        protected IEnumerable<string> GenerateLinkedRequestBuilderIncludeStatements(IEnumerable<OdcmProperty> odcmProperties, bool isPrototype)
         {
-            OdcmClass odcmClass = GetOdcmTypeAsClass();
-            IEnumerable<OdcmProperty> navigationProperties = odcmClass.NavigationProperties();
-            int navigationPropertiesCount = navigationProperties.Count();
+            int propertiesCount = odcmProperties.Count();
 
-            if (navigationPropertiesCount == 0)
+            if (propertiesCount == 0)
             {
                 return Enumerable.Empty<string>();
             }
 
-            IList<string> includeStatements = new List<string>(navigationProperties.Count());
+            IList<string> includeStatements = new List<string>(propertiesCount);
 
-            foreach (OdcmProperty navigationProperty in navigationProperties)
+            foreach (OdcmProperty odcmProperty in odcmProperties)
             {
-                string navigationEntityBaseName = NameConverter.CapitalizeName(navigationProperty.Name);
+                string linkedEntityBaseName = NameConverter.CapitalizeName(odcmProperty.Name);
 
-                string navigationEntityName = navigationProperty.IsCollection ?
-                    $"{GetEntityName()}{navigationEntityBaseName}Collection" :
-                    navigationProperty.Name;
+                string linkedBaseRequestBuilderName =
+                    (this is GraphClientEntity || this is GraphClientInterfaceEntity) ?
+                        NameConverter.CapitalizeName(odcmProperty.Projection.Type.Name) :
+                        odcmProperty.Name;
 
-                string navigationRequestBuilderEntityName =
-                    isInterface ?
-                        GetRequestBuilderInterfaceEntityName(navigationEntityName) :
-                        GetRequestBuilderEntityName(navigationEntityName);
+                string linkedEntityName = odcmProperty.IsCollection ?
+                    $"{GetEntityName()}{linkedEntityBaseName}Collection" :
+                    linkedBaseRequestBuilderName;
 
-                includeStatements.Add($"{navigationRequestBuilderEntityName}.h");
+                string linkedRequestBuilderEntityName =
+                    isPrototype ?
+                        GetRequestBuilderInterfaceEntityName(linkedEntityName) :
+                        GetRequestBuilderEntityName(linkedEntityName);
+
+                includeStatements.Add($"{linkedRequestBuilderEntityName}.h");
             }
 
             return includeStatements.OrderBy(statement => statement);
@@ -231,8 +233,9 @@ namespace Microsoft.Graph.ODataTemplateWriter.CodeHelpers.Cpp.Entities
         /// Generates request builder methods for linked entities.
         /// </summary>
         /// <param name="odcmProperties">The list of ODCM properties contain linked entity details.</param>
+        /// <param name="isPrototype">Whether only method prototype should be generated.</param>
         /// <returns>The string contains request builder method definitions.</returns>
-        protected string GenerateLinkedRequestBuilderMethods(IEnumerable<OdcmProperty> odcmProperties)
+        protected string GenerateLinkedRequestBuilderMethods(IEnumerable<OdcmProperty> odcmProperties, bool isPrototype)
         {
             int propertiesCount = odcmProperties.Count();
 
@@ -245,7 +248,7 @@ namespace Microsoft.Graph.ODataTemplateWriter.CodeHelpers.Cpp.Entities
 
             foreach (OdcmProperty odcmProperty in odcmProperties)
             {
-                string requestBuilderMethod = GenerateLinkedRequestBuilderMethod(odcmProperty);
+                string requestBuilderMethod = GenerateLinkedRequestBuilderMethod(odcmProperty, isPrototype);
 
                 requestBuilderMethods.Add(requestBuilderMethod);
             }
@@ -257,15 +260,21 @@ namespace Microsoft.Graph.ODataTemplateWriter.CodeHelpers.Cpp.Entities
         /// Generates the request builder method for linked entity.
         /// </summary>
         /// <param name="odcmProperty">The ODCM property contains linked entity details.</param>
+        /// <param name="isPrototype">Whether only method prototype should be generated.</param>
         /// <returns>The string contains request builder method definition.</returns>
-        protected string GenerateLinkedRequestBuilderMethod(OdcmProperty odcmProperty)
+        protected string GenerateLinkedRequestBuilderMethod(OdcmProperty odcmProperty, bool isPrototype)
         {
             string linkedEntityBaseName = NameConverter.CapitalizeName(odcmProperty.Name);
             string linkedEntityPath = odcmProperty.Name;
 
+            string linkedBaseRequestBuilderName =
+                (this is GraphClientEntity || this is GraphClientInterfaceEntity) ?
+                    NameConverter.CapitalizeName(odcmProperty.Projection.Type.Name) :
+                    odcmProperty.Name;
+
             string linkedEntityName = odcmProperty.IsCollection ?
                 $"{GetEntityName()}{linkedEntityBaseName}Collection" :
-                odcmProperty.Name;
+                linkedBaseRequestBuilderName;
 
             string linkedRequestBuilderEntityName =
                 GetRequestBuilderEntityName(linkedEntityName);
@@ -275,6 +284,13 @@ namespace Microsoft.Graph.ODataTemplateWriter.CodeHelpers.Cpp.Entities
 
             using (CodeBlock methodCodeBlock = new CodeBlock(2))
             {
+                if (isPrototype)
+                {
+                    methodCodeBlock.AppendLine($"virtual std::unique_ptr<{linkedRequestBuilderInterfaceEntityName}> {linkedEntityBaseName}() noexcept = 0;");
+
+                    return methodCodeBlock.ToString();
+                }
+
                 methodCodeBlock.AppendLine($"std::unique_ptr<{linkedRequestBuilderInterfaceEntityName}> {linkedEntityBaseName}() noexcept override");
 
                 using (CodeBlock bodyCodeBlock = new CodeBlock(methodCodeBlock))

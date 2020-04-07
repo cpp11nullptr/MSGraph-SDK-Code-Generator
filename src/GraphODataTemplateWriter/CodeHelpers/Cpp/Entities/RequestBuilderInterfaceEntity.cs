@@ -39,8 +39,11 @@ namespace Microsoft.Graph.ODataTemplateWriter.CodeHelpers.Cpp.Entities
             includesBlock.AppendFile($"{requestInterfaceEntityName}.h", isSystem: false);
             includesBlock.AppendLine();
 
+            OdcmClass odcmClass = GetOdcmTypeAsClass();
+            IEnumerable<OdcmProperty> navigationProperties = odcmClass.NavigationProperties();
+
             IEnumerable<string> navigationRequestBuilderInterfaceIncludeStatements =
-                GenerateNavigationRequestBuilderIncludeStatements(isInterface: true);
+                GenerateLinkedRequestBuilderIncludeStatements(navigationProperties, isPrototype: true);
 
             includesBlock.AppendFiles(navigationRequestBuilderInterfaceIncludeStatements, isSystem: false);
             includesBlock.AppendLine();
@@ -84,49 +87,8 @@ namespace Microsoft.Graph.ODataTemplateWriter.CodeHelpers.Cpp.Entities
         {
             OdcmClass odcmClass = GetOdcmTypeAsClass();
             IEnumerable<OdcmProperty> navigationProperties = odcmClass.NavigationProperties();
-            int navigationPropertiesCount = navigationProperties.Count();
 
-            if (navigationPropertiesCount == 0)
-            {
-                return string.Empty;
-            }
-
-            IList<string> requestBuilderMethods = new List<string>(navigationPropertiesCount);
-
-            foreach (OdcmProperty navigationProperty in navigationProperties)
-            {
-                string requestBuilderMethod = GenerateNavigationRequestBuilderMethodPrototype(navigationProperty);
-
-                requestBuilderMethods.Add(requestBuilderMethod);
-            }
-
-            string requestBuilderMethodDefinitions = string.Join("\n", requestBuilderMethods);
-
-            return requestBuilderMethodDefinitions;
-        }
-
-        /// <summary>
-        /// Generates the request builder method declaration to navigate into linked entity.
-        /// </summary>
-        /// <param name="navigationProperty">The ODCM property contains navigation details.</param>
-        /// <returns>The string contains request builder method declaration.</returns>
-        private string GenerateNavigationRequestBuilderMethodPrototype(OdcmProperty navigationProperty)
-        {
-            string navigationEntityBaseName = NameConverter.CapitalizeName(navigationProperty.Name);
-
-            string navigationEntityName = navigationProperty.IsCollection ?
-                $"{GetEntityName()}{navigationEntityBaseName}Collection" :
-                navigationProperty.Name;
-
-            string navigationRequestBuilderInterfaceEntityName =
-                GetRequestBuilderInterfaceEntityName(navigationEntityName);
-
-            using (CodeBlock methodCodeBlock = new CodeBlock(2))
-            {
-                methodCodeBlock.AppendLine($"virtual std::unique_ptr<{navigationRequestBuilderInterfaceEntityName}> {navigationEntityBaseName}() noexcept = 0;");
-
-                return methodCodeBlock.ToString();
-            }
+            return GenerateLinkedRequestBuilderMethods(navigationProperties, isPrototype: true);
         }
     }
 }
