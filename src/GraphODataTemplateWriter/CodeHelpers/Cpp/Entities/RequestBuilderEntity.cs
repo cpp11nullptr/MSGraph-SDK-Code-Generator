@@ -46,8 +46,11 @@ namespace Microsoft.Graph.ODataTemplateWriter.CodeHelpers.Cpp.Entities
             includesBlock.AppendFile($"{requestEntityName}.h", isSystem: false);
             includesBlock.AppendLine();
 
+            OdcmClass odcmClass = GetOdcmTypeAsClass();
+            IEnumerable<OdcmProperty> navigationProperties = odcmClass.NavigationProperties();
+
             IEnumerable<string> navigationRequestBuilderIncludeStatements =
-                GenerateNavigationRequestBuilderIncludeStatements(isInterface: false);
+                GenerateLinkedRequestBuilderIncludeStatements(navigationProperties, isPrototype: false);
 
             includesBlock.AppendFiles(navigationRequestBuilderIncludeStatements, isSystem: false);
             includesBlock.AppendLine();
@@ -101,7 +104,7 @@ namespace Microsoft.Graph.ODataTemplateWriter.CodeHelpers.Cpp.Entities
             OdcmClass odcmClass = GetOdcmTypeAsClass();
             IEnumerable<OdcmProperty> navigationProperties = odcmClass.NavigationProperties();
 
-            return GenerateLinkedRequestBuilderMethods(navigationProperties);
+            return GenerateLinkedRequestBuilderMethods(navigationProperties, isPrototype: false);
         }
     }
 }

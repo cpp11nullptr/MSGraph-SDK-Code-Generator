@@ -96,6 +96,15 @@ namespace Microsoft.Graph.ODataTemplateWriter.CodeHelpers.Cpp
             new GraphClientEntity(odcmClass, odcmLinkedEntities);
 
         /// <summary>
+        /// Creates a graph client interface entity.
+        /// </summary>
+        /// <param name="odcmClass">The ODCM class instance.</param>
+        /// <param name="odcmLinkedEntities">A list of linked entities.</param>
+        /// <returns>The graph client interface entity instance.</returns>
+        public static GraphClientInterfaceEntity ToGraphClientInterfaceEntity(this OdcmClass odcmClass, IEnumerable<OdcmProperty> odcmLinkedEntities) =>
+            new GraphClientInterfaceEntity(odcmClass, odcmLinkedEntities);
+
+        /// <summary>
         /// Creates a request builder entity.
         /// </summary>
         /// <param name="odcmClass">The ODCM class instance.</param>

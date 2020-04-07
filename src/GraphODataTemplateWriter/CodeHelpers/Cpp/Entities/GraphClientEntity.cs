@@ -29,7 +29,25 @@ namespace Microsoft.Graph.ODataTemplateWriter.CodeHelpers.Cpp.Entities
         /// <inheritdoc/>
         public override string GenerateIncludeStatements()
         {
-            return string.Empty;
+            string basePrimaryEntityName = GetBasePrimaryEntityName();
+            string baseInterfaceEntityName = GetBaseInterfaceEntityName();
+
+            IncludeBlock includesBlock = new IncludeBlock();
+
+            includesBlock.AppendFile(IncludeFile.StdMemory, isSystem: true);
+            includesBlock.AppendLine();
+
+            includesBlock.AppendFile($"{baseInterfaceEntityName}.h", isSystem: false);
+            includesBlock.AppendFile($"{basePrimaryEntityName}.h", isSystem: false);
+            includesBlock.AppendLine();
+
+            IEnumerable<string> linkedRequestBuilderInterfaceIncludeStatements =
+                GenerateLinkedRequestBuilderIncludeStatements(odcmLinkedEntities, isPrototype: false);
+
+            includesBlock.AppendFiles(linkedRequestBuilderInterfaceIncludeStatements, isSystem: false);
+            includesBlock.AppendLine();
+
+            return includesBlock.ToString();
         }
 
         /// <inheritdoc/>
@@ -123,7 +141,7 @@ namespace Microsoft.Graph.ODataTemplateWriter.CodeHelpers.Cpp.Entities
         /// <returns>The string contains request builder methods definitions.</returns>
         public string GenerateLinkedRequestBuilderMethods()
         {
-            return GenerateLinkedRequestBuilderMethods(odcmLinkedEntities);
+            return GenerateLinkedRequestBuilderMethods(odcmLinkedEntities, isPrototype: false);
         }
 
         /// <summary>

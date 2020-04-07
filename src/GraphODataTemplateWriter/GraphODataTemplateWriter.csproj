@@ -66,6 +66,7 @@
     <Compile Include="CodeHelpers\Cpp\Entities\CollectionRequestInterfaceEntity.cs" />
     <Compile Include="CodeHelpers\Cpp\Entities\CollectionResponseEntity.cs" />
     <Compile Include="CodeHelpers\Cpp\Entities\GraphClientEntity.cs" />
+    <Compile Include="CodeHelpers\Cpp\Entities\GraphClientInterfaceEntity.cs" />
     <Compile Include="CodeHelpers\Cpp\EntityConverter.cs" />
     <Compile Include="CodeHelpers\Cpp\Entities\BaseEntity.cs" />
     <Compile Include="CodeHelpers\Cpp\Entities\BaseRequestEntity.cs" />
